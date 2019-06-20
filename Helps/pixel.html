@@ -1,0 +1,57 @@
+<html> 
+<head> 
+<title>Треуголники</title> 
+<select name="dpi" id="s1"> 
+<option value="72"> 72</option> 
+<option value="92"> 92</option> 
+<option value="150"> 150</option> 
+</select> 
+<input type=text id=a> 
+<input type=text id=b> 
+<input type=text id=c><br> 
+<input type=button id=btn value="ok"><br> 
+
+<canvas id=img width=100 height=100> 
+</head> 
+<body> 
+
+<script> 
+
+btn.onclick = () => { 
+let A = 1 * a.value, 
+B = 1 * b.value, 
+C = 1 * c.value; 
+if(A>(B+C)) { 
+alert ('Невозможно построить'); 
+} 
+else if(B>(A+C)) { 
+alert ('Невозможно построить'); 
+} 
+else if(C>(B+A)){ 
+alert ('Невозможно построить'); 
+} 
+else { 
+let p = (A + B + C) / 2; 
+let S = Math.sqrt(p * (p - A) * (p - B) * (p - C)); 
+let SinA = 2 * S / (A * B); 
+let alpha = Math.asin(SinA); 
+
+let x = B * Math.cos(alpha), 
+y = B * Math.sin(alpha); 
+
+let ctx = img.getContext("2d"); 
+
+ctx.beginPath(); 
+ctx.moveTo(10 + A, 70); 
+ctx.lineTo(10, 70); 
+ctx.lineTo(10 + x, 70 - y); 
+ctx.lineTo(10 + A, 70); 
+ctx.stroke(); 
+var mm = document.getElementById(“s1”).value; 
+mm=(pixels*25,4)/dpi 
+} 
+} 
+
+</script> 
+</body> 
+</html>

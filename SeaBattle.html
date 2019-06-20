@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Угадай число</title>
+</head>
+<body>
+	<script type="text/javascript">
+		var number = 2;
+
+		var success = false;
+		var guesses = 0;
+
+		while(!success) {
+			var userNum = prompt("Введите число от 0 до 10");
+				guesses += 1;
+				if (userNum == number) {
+					alert("Вы угадали число с " + guesses + " попытки!");
+					success = true;
+				}
+			}
+	</script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Обратная польская запись</title>
+</head>
+<body>
+	<h1>Обратная польская запись</h1>
+	<p>Введите выражение в виде обратной польской записи: <input type="text" id="polish"></p>
+	<button type="button">Рассчитать</button>
+	<p id="res"></p>
+
+	<script>
+		var btn = document.getElementsByTagName('button')[0];
+		var res = document.getElementById('res');
+		var polish = document.getElementById('polish');
+
+		btn.onclick = function() {
+			
+			res.innerHTML = "Результат: " + getResPolish(polish.value);
+		}
+
+		var operators = {
+		    '+': function(x, y) {
+		    	return x + y;
+		    },
+		    '-': function(x, y) {
+		    	return x - y;
+		    },
+		    '*': function(x, y) {
+		    	return x * y;
+		    },
+		    '/': function(x, y) {
+		    	return x / y;
+		    }
+		};
+
+		function getResPolish(polish) {
+		    var stack = [];
+		    
+		   	polish.split(' ').forEach(function (token) {
+				if (token in operators) {
+				    var ref = [stack.pop(), stack.pop()],
+				        y = ref[0],
+				        x = ref[1];
+				   	stack.push(operators[token](x, y));
+			  	} else {
+			    stack.push(parseFloat(token));
+			  	}
+			});
+
+		    return stack.pop();
+		};
+	</script>
+</body>
+</html>

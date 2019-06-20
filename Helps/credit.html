@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Кредитный калькулятор</title>
+	<style>
+		body {
+			margin: 30px;
+		}
+
+	</style>
+</head>
+<body>
+	<form name="forma">
+	<p>Введите сумму кредита: <input type="text" name="price" id="price"></p>
+	
+	<p>Введите процентную ставку годовых: <input type="text" name="percent" id="percent"></p>
+	
+	<p>Введите количество месяцев: <input type="text" name="months" id="months"></p>
+	
+	<img src="credit.png" alt="">
+	<br>
+	<button type="button" id="btn">Рассчитать оплату за месяц</button>
+
+	</form>
+
+
+	<script>
+
+
+		var btn = document.getElementById('btn');
+
+		btn.onclick = function() {
+			var price = document.getElementById('price');
+			var percent = document.getElementById('percent');
+			var months = document.getElementById('months');
+
+			alert( "Оплата за месяц составит " + ipoteka( price.value, percent.value, months.value ) + " руб");
+
+		}
+
+		function ipoteka( price, percent, months ) {
+			var i = parseFloat( percent / 100 / 12 );
+			var n = parseFloat( months );
+			var r = price * ( ( i * Math.pow( 1+i, n ) ) / ( Math.pow( 1+i, n ) - 1 ) );
+			return r.toFixed(2);
+		}
+
+	</script>
+</body>
+</html>

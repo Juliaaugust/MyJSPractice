@@ -1,0 +1,150 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Обратная польская запись</title>
+</head>
+<body>
+	<h1>Обратная польская запись</h1>
+	<p>Введите выражение: <input type="text" id="expr"></p>
+	<button type="button">Получить польскую запись и результат</button>
+	<p id="polish"></p>
+	<p id="res"></p>
+
+	<script>
+		var btn = document.getElementsByTagName("button")[0];
+		var res = document.getElementById("res");
+		var polish = document.getElementById("polish");
+		var expr = document.getElementById("expr");
+
+		btn.onclick = function() {
+
+			var polish_str = "";
+			toPolish(expr.value).forEach(function (token) {
+				polish_str = polish_str + " " + token;
+			});
+			polish.innerHTML = "Польская запись: " + polish_str;
+			
+			res.innerHTML = "Результат: " + getResPolish(toPolish(expr.value));
+		}
+
+		function toPolish(expr) {
+			var operators = {
+				"*": 3,
+				"/": 3,
+				"+": 2,
+				"-": 2,
+				"(": 1,
+				")": 1
+			};
+
+		    var stack = [];
+		    var res = [];
+
+		    expr = expr.split(" ").join(""); // убираем все пробелы из строки
+
+		    var expr_arr = [];
+
+		    for (var i = 0; i < expr.length-1; i++) { // идем по строке посимвольно
+
+	    		if(operators[expr[i]] != operators[expr[i+1]]) { // если соседние символы – "разные"
+	    			expr_arr.push(expr[i]); // кладем первый символ в массив
+
+	    		} else if(operators[expr[i]] == operators[expr[i+1]]) { // если соседние символы – "одинаковые" (два числа)
+
+	    			var st = ""; // создаем пустую строку
+	    			while(operators[expr[i]] == operators[expr[i+1]] && i < expr.length-1) { // пока если соседние символы – "одинаковые"
+	    				st += expr[i]; // добавляем эти символы в пустую строку
+	    				i++;
+	    			}
+	    			st += expr[i];
+	    			expr_arr.push(st);
+	    		}
+		    }
+		    if (operators[expr[expr.length-1]]) { // если в конце строки остался оператор (ведь выше мы проверяли до ПРЕДпоследнего символа)
+		    	expr_arr.push(expr[expr.length-1]); // добавим его в массив
+		    }
+		    
+		   	expr_arr.forEach(function (token) {
+				if (token in operators) {
+
+					// если у нас знак операции (а не скобка)
+					if(operators[token] != 1) {
+
+						// если стек пуст или находящиеся в нем символы имеют меньший приоритет,
+						// чем приоритет текущего символа, то помещаем текущий символ в стек
+						if (stack.length == 0 || operators[stack[stack.length-1]] < operators[token]) {
+					    	stack.push(token);
+
+					    	// если символ, находящийся на вершине стека имеет приоритет, больший или равный приоритету текущего символа, 
+					    	//то извлекаем символы из стека в выходную строку до тех пор, пока выполняется это условие
+					    } else if (operators[stack[stack.length-1]] >= operators[token]) {
+					    	while (stack.length != 0 || operators[stack[stack.length-1]] >= operators[token]) {
+					    		res.push(stack.pop());
+					    	}
+					    	stack.push(token);
+					    }
+
+					    // если текущий символ - открывающая скобка, то помещаем ее в стек
+					} else if(token == "(") {
+						stack.push(token);
+
+						// если текущий символ - закрывающая скобка, то извлекаем символы из стека в выходную строку, 
+						// пока не встретим в стеке открывающую скобку. Скобки уничтожаем
+					} else if(token == ")") {
+						while (stack[stack.length-1] != "(") {
+							res.push(stack.pop());
+						}
+						stack.pop();
+					}
+				    
+				    // иначе (если число или оператор)
+			  	} else {
+			    	res.push(token);
+			  	}
+			});
+
+		   	// если вся входная строка разобрана, а в стеке еще остаются знаки операций, извлекаем их из стека в выходную строку
+			if (stack.length > 0) {
+				while (stack.length != 0) {
+					res.push(stack.pop());
+				}
+			}
+
+		    return res;
+		};
+
+		function getResPolish(polish) {
+			var operators = {
+			    '+': function(x, y) {
+			    	return x + y;
+			    },
+			    '-': function(x, y) {
+			    	return x - y;
+			    },
+			    '*': function(x, y) {
+			    	return x * y;
+			    },
+			    '/': function(x, y) {
+			    	return x / y;
+			    }
+			};
+
+		    var stack = [];
+		    
+		   	polish.forEach(function (token) {
+				if (token in operators) {
+				    var ref = [stack.pop(), stack.pop()],
+				        y = ref[0],
+				        x = ref[1];
+				   	stack.push(operators[token](x, y));
+			  	} else {
+			    stack.push(parseFloat(token));
+			  	}
+			});
+
+		    return stack.pop();
+		};
+	</script>
+</body>
+</html>

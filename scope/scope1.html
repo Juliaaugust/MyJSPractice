@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<button id="btn1">Нажать</button> <span id="sp1">0</span>
+	<button id="btn2">Нажать</button> <span id="sp2">0</span>
+	<button id="btn3">Нажать</button> <span id="sp3">0</span>
+	<button id="btn4">Нажать</button> <span id="sp4">0</span>
+	<button id="btn5">Нажать</button> <span id="sp5">0</span>
+	<script>
+		var btn1 = document.getElementById('btn1');
+		var btn2 = document.getElementById('btn2');
+		var btn3 = document.getElementById('btn3');
+		var btn4 = document.getElementById('btn4');
+		var btn5 = document.getElementById('btn5');
+
+		var sp1 = document.getElementById('sp1');
+		var sp2 = document.getElementById('sp2');
+		var sp3 = document.getElementById('sp3');
+		var sp4 = document.getElementById('sp4');
+		var sp5 = document.getElementById('sp5');
+
+
+		function makeCounter() {
+			var counter = 1;
+			return function() {
+				return counter++;
+			}
+		}
+
+		var counter1 = makeCounter();
+		var counter2 = makeCounter();
+		var counter3 = makeCounter();
+		var counter4 = makeCounter();
+		var counter5 = makeCounter();
+
+		btn1.onclick = function() {
+			sp1.innerHTML = counter1();
+		}
+		btn2.onclick = function() {
+			sp2.innerHTML = counter2();
+		}
+		btn3.onclick = function() {
+			sp3.innerHTML = counter3();
+		}
+		btn4.onclick = function() {
+			sp4.innerHTML = counter4();
+		}
+		btn5.onclick = function() {
+			sp5.innerHTML = counter5();
+		}
+		
+
+
+	</script>
+</body>
+</html>

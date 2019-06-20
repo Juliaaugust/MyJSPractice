@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Наибольшее число в строке</title>
+</head>
+<body>
+	<h1>Поиск наибольшего числа в строке</h1>
+
+	<p>Введите строку с числами, разделенными запятыми <input id="inp" type="text"></p>
+	<button type="button" id="btn">Найти наибольшее число</button>
+	<p id="res"></p>
+
+	<script>
+		var btn = document.getElementById("btn");
+		var res = document.getElementById("res");
+		var inp = document.getElementById("inp");
+
+		btn.onclick = function () {
+			var arrNum = inp.value.split(",");
+			res.innerHTML = "Максимальное число: " + maxValue(arrNum);
+		}
+
+		function maxValue(arrNum) {
+			max = arrNum[0];
+			for (i = 1; i < arrNum.length; i++) {
+				if (parseInt(arrNum[i]) > max) max = arrNum[i];
+			}
+			return max;
+		}
+	</script>
+</body>
+</html>

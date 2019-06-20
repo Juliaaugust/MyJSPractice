@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Перевод числа</title>
+</head>
+<body>
+	<h1>Перевод числа в 16-ричную систему счисления</h1>
+	<p>Введите число <input type="text" id="num"></p>
+	<button id="btn" type="button">Перевести</button>
+	<p id="res"></p>
+
+
+	<script>
+
+		var btn = document.getElementById('btn');
+		var res = document.getElementById('res');
+
+		btn.onclick = function() {
+			var num = document.getElementById('num');
+			res.innerHTML = "Результат: " + (toHex(num.value));
+		}
+		
+		function toHex(x) {
+			var lettersHex = ['A', 'B', 'C', 'D', 'E', 'F'];
+
+			var res = "";
+			while(x > 0) {
+				if (x % 16 >= 10) {
+					res = lettersHex[x % 10] + res;
+				} else {
+					res = x % 16 + res;
+				}
+				x = Math.floor(x/16)
+			}
+
+			return res;
+		}
+
+	</script>
+</body>
+</html>

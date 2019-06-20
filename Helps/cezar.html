@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Шифр Цезаря</title>
+</head>
+<body>
+	<h1>Шифр Цезаря</h1>
+	<p>Введите строку <input type="text" id="str"></p>
+	<p>Введите сдвиг <input type="text" id="shift"></p>
+	<button type="button">Зашифровать</button>
+	<p id="res"></p>
+
+	<script>
+		
+
+		var btn = document.getElementsByTagName('button')[0];
+		var str = document.getElementById('str');
+		var shift = document.getElementById('shift');
+		var res = document.getElementById('res');
+
+		btn.onclick = function() {
+			
+			res.innerHTML = "Результат: " + Ceasar(str.value, shift.value);
+		}
+
+
+
+		function Ceasar(str, shift) {
+			var strLettersLower = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
+			var strLettersUpper = [];
+			for (var i = 0; i < strLettersLower.length; i++) {
+				strLettersUpper[i] = strLettersLower[i].toUpperCase();
+			}
+
+			str = str.split("");
+			ceasar_str = [];
+			
+			for (var i = 0; i < str.length; i++) {
+				if (str[i] == str[i].toUpperCase()) {
+					ind = strLettersUpper.indexOf(str[i] + shift);
+					ceasar_str.push(strLettersUpper[ind]);
+					console.log(ind)
+				} else if (str[i] == str[i].toLowerCase()) {
+					ind = strLettersLower.indexOf(str[i] + shift);
+					ceasar_str.push(strLettersLower[ind]);
+					console.log(ind)
+				}
+			}
+			return ceasar_str.join("");
+		}
+
+		
+	</script>
+</body>
+</html>

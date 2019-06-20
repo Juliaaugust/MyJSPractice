@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+<head>
+	<title>Слайдер</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width">
+	<style>
+		body {
+			margin: 0;
+		}
+		
+		#slider {
+			width: 600px;
+			margin: 100px auto 0;
+
+			overflow: hidden;
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+		}
+		.slide {
+			box-sizing: border-box;
+			position: absolute;
+		}
+
+		.slide-visible {
+			top: 0;
+			left: 0;
+		}
+
+		#slider img {
+			width: 100%;
+		}
+
+		#slider button {
+			position: absolute;
+			top: 50%;
+			width: 50px;
+			height: 50px;
+			border-radius: 50%;
+			border: 0;
+			background: rgba(0,0,0,0.6);
+			color: #fff;
+			font-size: 24px;
+			outline: none;
+
+			margin-top: -25px;
+			cursor: pointer;
+		}
+
+		#slider_next {
+			right: 20px;
+		}
+
+		#slider_prev {
+			left: 20px;
+		}
+
+		.slider-nav {
+			position: absolute;
+			bottom: 20px;
+			text-align: center;
+			width: 100%;
+		}
+
+		.slider-nav span {
+			display: inline-block;
+			width: 10px;
+			height: 10px;
+			background: #fff;
+			border-radius: 50%;
+			margin: 0 10px;
+			cursor: pointer;
+		}
+
+		.slider-nav .active {
+			background: #222;
+		}
+
+		
+		}
+	</style>
+</head>
+<body>
+	<div id="slider">
+		<div class="slide">
+			<img src="pics/5.jpg" alt="">
+		</div>
+		<div class="slide" >
+			<img src="pics/4.jpg" alt="">
+		</div>
+		<div class="slide"  id="pic-3">
+			<img src="pics/3.jpg" alt="">
+		</div>
+		<div class="slide"  id="pic-2">
+			<img src="pics/2.jpg" alt="">
+		</div>
+		<div class="slide" id="pic-1">
+			<img src="pics/1.jpg" alt="">
+		</div>
+
+		<button id="slider_next">&gt;</button>
+		<button id="slider_prev">&lt;</button>
+		<div class="slider-nav">
+			
+		</div>
+	</div>
+
+	<script src="jquery-3.3.1.min.js"></script>	
+	<script src="slider2.js"></script>	
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+
+	<h1>Разделение строки</h1>
+	<button type="button" id="btn">Разделить</button>
+	
+	<script>
+		var btn = document.getElementById("btn");
+
+		btn.onclick = function() {
+			var operators = {
+				"*": 3,
+				"/": 3,
+				"+": 2,
+				"-": 2,
+				"(": 1,
+				")": 1
+			};
+
+		    var expr = "21 - 7 * (1-2) * 11";
+		    expr = expr.split(" ").join(""); // убираем все пробелы из строки
+
+		    var expr_arr = [];
+
+		    for (var i = 0; i < expr.length-1; i++) { // идем по строке посимвольно
+
+	    		if(operators[expr[i]] != operators[expr[i+1]]) { // если соседние символы – "разные"
+	    			expr_arr.push(expr[i]); // кладем первый символ в массив
+
+	    		} else if(operators[expr[i]] == operators[expr[i+1]]) { // если соседние символы – "одинаковые" (два числа)
+
+	    			var st = ""; // создаем пустую строку
+	    			while(operators[expr[i]] == operators[expr[i+1]] && i < expr.length-1) { // пока если соседние символы – "одинаковые" (и пока есть куда "идти")
+	    				st += expr[i]; // добавляем эти символы в пустую строку
+	    				i++;
+	    			}
+	    			st += expr[i];
+	    			expr_arr.push(st);
+	    		}
+		    }
+		    if (operators[expr[expr.length-1]]) { // если в конце строки остался оператор (ведь выше мы проверяли до ПРЕДпоследнего символа)
+		    	expr_arr.push(expr[expr.length-1]); // добавим его в массив
+		    }
+		    
+		    console.log(expr_arr);
+
+		}
+
+		
+	</script>
+</body>
+</html>
