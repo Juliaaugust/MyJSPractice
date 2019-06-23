@@ -1,13 +1,17 @@
 const input = document.getElementById('input');
 const ulElem = document.getElementById('list');
 const actionPanelGroup = document.getElementById('actionPanelGroup');
+const selectAllBtn = document.getElementById('selectAllBtn');
+const resetBtn = document.getElementById('resetBtn');
 
 actionPanelGroup.style.display = 'none';
+selectAllBtn.style.display = 'none';
+resetBtn.style.display = 'none';
 
 let todoList = [];
 
 input.addEventListener('keydown', event => {
-	if(event.key === "Enter" || event.keyCode === 13){
+	if ((event.key === "Enter" || event.keyCode === 13) && (input.value)) {
 		todoList.unshift({
 			content: input.value,
 			done: false,
@@ -35,11 +39,12 @@ function upgradeView() {
 
 		const checkElem = document.createElement('input');
 		checkElem.type = 'checkbox';
-		checkElem.className = 'orm-check-input';
+		checkElem.className = 'form-check-input';
 		checkElem.id = 'todoItem' + index;
-		todoItem.select = checkElem.checked;
+		checkElem.checked = todoItem.select;
 		checkElem.addEventListener('change', () => {
-			todoItem.select = !todoItem.select;
+			todoItem.select = checkElem.checked;
+			upgradeView();
 		})
 
 		const lableElem = document.createElement('label');
@@ -86,7 +91,6 @@ function upgradeView() {
 
 		divElem.append(checkElem);
 		divElem.append(lableElem);
-		// divElem.append(doneBtn);
 		divElem.append(removeBtn);
 
 		removeBtn.addEventListener('click', () => {
@@ -98,12 +102,30 @@ function upgradeView() {
 			// upgradeView();
 		})
 	}
+	// выбран (галочкой) хотя бы один элемент списка
+	const isSomeSelectedElem = todoList.some(todoItem => todoItem.select);
+	if (isSomeSelectedElem) {
+		actionPanelGroup.style.display = 'block';
+		resetBtn.style.display = 'inline-block';
+	} else {
+		actionPanelGroup.style.display = 'none';
+		resetBtn.style.display = 'none';
+	}
+
+	// если в списке что-то есть и все его элементы не выбраны
+	const isEverySelectedElem = todoList.every(todoItem => todoItem.select);
+	if (todoList.length && !isEverySelectedElem) {
+		selectAllBtn.style.display = 'inline-block';
+	} else {
+		selectAllBtn.style.display = 'none';
+	}
 }
 
 document.getElementById('doAction').addEventListener('click', () => {
 	for (const todoItem of todoList) {
 		if (todoItem.select) {
 			todoItem.done = true;
+			todoItem.select = false;
 		}
 	}
 	upgradeView();
@@ -112,6 +134,7 @@ document.getElementById('restoreAction').addEventListener('click', () => {
 	for (const todoItem of todoList) {
 		if (todoItem.select) {
 			todoItem.done = false;
+			todoItem.select = false;
 		}
 	}
 	upgradeView();
@@ -129,14 +152,26 @@ document.getElementById('removeAction').addEventListener('click', () => {
 	upgradeView();
 })
 
-document.getElementById('selectAllBtn').addEventListener('click', () => {
-	const checkboxList = document.getElementsByClassName('orm-check-input');
+selectAllBtn.addEventListener('click', () => {
+	const checkboxList = document.getElementsByClassName('form-check-input');
 	
 	for (const index in todoList) {
 		todoList[index].select = true;
 		checkboxList[index].checked = true;
 	}
+	upgradeView();
 })
+
+resetBtn.addEventListener('click', () => {
+	const checkboxList = document.getElementsByClassName('form-check-input');
+	
+	for (const index in todoList) {
+		todoList[index].select = false;
+		checkboxList[index].checked = false;
+	}
+	upgradeView();
+})
+
 
 
 
