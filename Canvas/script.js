@@ -8,6 +8,11 @@
 
 	console.log(mouse);
 
+	const grayFilterCheck = document.getElementById('filterGray');
+	const redFilterCheck = document.getElementById('filterRed');
+	const blueFilterCheck = document.getElementById('filterBlue');
+	const greenFilterCheck = document.getElementById('filterGreen');
+
 	const imageParams = {
 		offsetX: 0,
 		offsetY: 0,
@@ -35,7 +40,7 @@
 			imageParams.offsetY += mouse.dy;
 		}
 		if (mouse.wheel) {
-			imageParams.scale += mouse.wheel / 1000; // делим на 1000 для плавного увеличения/уменьшения масштаба
+			imageParams.scale -= mouse.wheel / 1000; // делим на 1000 для плавного увеличения/уменьшения масштаба
 		}
 		
 		context.drawImage(image, 0, 0, image.width, image.height, 
@@ -49,5 +54,30 @@
 	function clearCanvas() {
 		canvas.width = canvas.width;
 	}
+
+	grayFilterCheck.addEventListener('change', () => {
+		// console.log('grayFilterCheck', grayFilterCheck.checked);
+
+	})
+	redFilterCheck.addEventListener('change', () => {
+		// console.log('redFilterCheck', redFilterCheck.checked);
+
+		// создаесм виртуальный элемент canvas
+		const canvas = document.createElement('canvas');
+		const context = canvas.getContext('2d');
+		canvas.width = image.width;
+		canvas.height = image.height;
+		context.drawImage(image, 0, 0, image.width, image.height, 0, 0, image.width, image.height);
+
+		const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+		console.log(imageData); // для использования getImageData нужно поднять сервер локально
+
+	})
+	blueFilterCheck.addEventListener('change', () => {
+		console.log('blueFilterCheck', blueFilterCheck.checked)
+	})
+	greenFilterCheck.addEventListener('change', () => {
+		console.log('greenFilterCheck', greenFilterCheck.checked)
+	})
 	
 })()

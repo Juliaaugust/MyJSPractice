@@ -56,6 +56,7 @@ function getMouse(elem) {
 	// прокручивания колесика мыши над эл-том (уменьшение/увеличение изображения)
 	elem.addEventListener('mousewheel', event => {
 		mouse.wheel = event.deltaY;
+		event.preventDefault(); // чтобы не прокручивалась сама страница, а только изображение
 	})
 
 	return mouse;
