@@ -1,8 +1,8 @@
 (async function () {
 	const canvas = document.getElementById('canvas'); // DOM элемент
 	const context = canvas.getContext('2d'); // программный элемент
-	const image = await loadImage('space.jpg');
-	const mouse = getMouse(canvas); // теперь в mouse хранится объект, 
+	const originalImage = await loadImage('space.jpg');
+	const mouse = getMouse(canvas); // теперь в mouse хранится объект,
 									// который будет содержать данные по координатам мыши над эл-том canvas
 									// этой ф-ии нет в нативном JS, поэтому она создана в additional.js
 
@@ -12,6 +12,8 @@
 	const redFilterCheck = document.getElementById('filterRed');
 	const blueFilterCheck = document.getElementById('filterBlue');
 	const greenFilterCheck = document.getElementById('filterGreen');
+
+	let image = originalImage;
 
 	const imageParams = {
 		offsetX: 0,
@@ -28,7 +30,7 @@
 
 	update();
 	function update() {
-		// встроенная в браузер ф-я requestAnimationFrame: вызывает переданную в нее ф-ю 
+		// встроенная в браузер ф-я requestAnimationFrame: вызывает переданную в нее ф-ю
 		// только тогда, когда будет обновление изображения самого монитора ("умный" setTimeout)
 		requestAnimationFrame(update);
 
@@ -42,8 +44,8 @@
 		if (mouse.wheel) {
 			imageParams.scale -= mouse.wheel / 1000; // делим на 1000 для плавного увеличения/уменьшения масштаба
 		}
-		
-		context.drawImage(image, 0, 0, image.width, image.height, 
+
+		context.drawImage(image, 0, 0, image.width, image.height,
 			imageParams.offsetX, imageParams.offsetY,  // отрисовка изображения в соответствии со смещением
 			image.width * imageParams.scale, image.height * imageParams.scale); // увеличиваем масштаб изображения
 		// console.log(mouse);
@@ -60,24 +62,73 @@
 
 	})
 	redFilterCheck.addEventListener('change', () => {
-		// console.log('redFilterCheck', redFilterCheck.checked);
+		if (redFilterCheck.checked) {
+			// создаесм виртуальный элемент canvas
+			const canvas = document.createElement('canvas');
+			const context = canvas.getContext('2d');
+			canvas.width = image.width;
+			canvas.height = image.height;
+			context.drawImage(image, 0, 0, image.width, image.height, 0, 0, image.width, image.height);
 
-		// создаесм виртуальный элемент canvas
-		const canvas = document.createElement('canvas');
-		const context = canvas.getContext('2d');
-		canvas.width = image.width;
-		canvas.height = image.height;
-		context.drawImage(image, 0, 0, image.width, image.height, 0, 0, image.width, image.height);
+			const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+			//console.log(imageData); // для использования getImageData нужно поднять сервер локально
 
-		const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-		console.log(imageData); // для использования getImageData нужно поднять сервер локально
-
+			// imageData.data – массив всех пикселей изображения
+			// хранит R, G, B + прозрачность
+			for (let i = 0; i < imageData.data.length; i += 4) {
+				imageData.data[i] = 0;
+			}
+			context.putImageData(imageData, 0, 0, 0, 0, image.width, image.height);
+			image = canvas;
+		} else {
+			image = originalImage;
+		}
 	})
 	blueFilterCheck.addEventListener('change', () => {
-		console.log('blueFilterCheck', blueFilterCheck.checked)
+		if (blueFilterCheck.checked) {
+			// создаесм виртуальный элемент canvas
+			const canvas = document.createElement('canvas');
+			const context = canvas.getContext('2d');
+			canvas.width = image.width;
+			canvas.height = image.height;
+			context.drawImage(image, 0, 0, image.width, image.height, 0, 0, image.width, image.height);
+
+			const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+			//console.log(imageData); // для использования getImageData нужно поднять сервер локально
+
+			// imageData.data – массив всех пикселей изображения
+			// хранит R, G, B + прозрачность
+			for (let i = 0; i < imageData.data.length; i += 4) {
+				imageData.data[i + 2] = 0;
+			}
+			context.putImageData(imageData, 0, 0, 0, 0, image.width, image.height);
+			image = canvas;
+		} else {
+			image = originalImage;
+		}
 	})
 	greenFilterCheck.addEventListener('change', () => {
-		console.log('greenFilterCheck', greenFilterCheck.checked)
+		if (greenFilterCheck.checked) {
+			// создаесм виртуальный элемент canvas
+			const canvas = document.createElement('canvas');
+			const context = canvas.getContext('2d');
+			canvas.width = image.width;
+			canvas.height = image.height;
+			context.drawImage(image, 0, 0, image.width, image.height, 0, 0, image.width, image.height);
+
+			const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+			//console.log(imageData); // для использования getImageData нужно поднять сервер локально
+
+			// imageData.data – массив всех пикселей изображения
+			// хранит R, G, B + прозрачность
+			for (let i = 0; i < imageData.data.length; i += 4) {
+				imageData.data[i + 1] = 0;
+			}
+			context.putImageData(imageData, 0, 0, 0, 0, image.width, image.height);
+			image = canvas;
+		} else {
+			image = originalImage;
+		}
 	})
-	
+
 })()
