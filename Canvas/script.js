@@ -23,6 +23,13 @@
 		scale: 1 // масштаб (для прокрутки)
 	}
 
+	const filters = {
+		gray: false,
+		red: false,
+		blue: false,
+		green: false
+	}
+
 	canvas.width = 750;
 	canvas.height = 750;
 
@@ -60,80 +67,30 @@
 	}
 
 	grayFilterCheck.addEventListener('change', () => {
-		if (grayFilterCheck.checked) {
-			// создаесм виртуальный элемент canvas
-			const canvas = document.createElement('canvas');
-			const context = canvas.getContext('2d');
-			canvas.width = image.width;
-			canvas.height = image.height;
-			context.drawImage(image, 0, 0, image.width, image.height, 0, 0, image.width, image.height);
-
-			const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-
-			for (let i = 0; i < imageData.data.length; i += 4) {
-				//  найдем среднее арифметическое для каждого цвета
-				let average = (imageData.data[i] + imageData.data[i + 1] + imageData.data[i + 2]) / 3;
-				imageData.data[i] = average;
-				imageData.data[i + 1] = average;
-				imageData.data[i + 2] = average;
-			}
-			context.putImageData(imageData, 0, 0, 0, 0, image.width, image.height);
-			image = canvas;
-		} else {
-			image = originalImage;
-		}
+		filters.gray = grayFilterCheck.checked;
+		updateFilter();
 	})
 
 	redFilterCheck.addEventListener('change', () => {
-		if (redFilterCheck.checked) {
-			// создаесм виртуальный элемент canvas
-			const canvas = document.createElement('canvas');
-			const context = canvas.getContext('2d');
-			canvas.width = image.width;
-			canvas.height = image.height;
-			context.drawImage(image, 0, 0, image.width, image.height, 0, 0, image.width, image.height);
-
-			const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-			//console.log(imageData); // для использования getImageData нужно поднять сервер локально
-
-			// imageData.data – массив всех пикселей изображения
-			// хранит R, G, B + прозрачность
-			for (let i = 0; i < imageData.data.length; i += 4) {
-				imageData.data[i] = 0;
-			}
-			context.putImageData(imageData, 0, 0, 0, 0, image.width, image.height);
-			image = canvas;
-		} else {
-			image = originalImage;
-		}
+		filters.red = redFilterCheck.checked;
+		updateFilter();
 	})
 
 	blueFilterCheck.addEventListener('change', () => {
-		if (blueFilterCheck.checked) {
-			// создаесм виртуальный элемент canvas
-			const canvas = document.createElement('canvas');
-			const context = canvas.getContext('2d');
-			canvas.width = image.width;
-			canvas.height = image.height;
-			context.drawImage(image, 0, 0, image.width, image.height, 0, 0, image.width, image.height);
-
-			const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-			//console.log(imageData); // для использования getImageData нужно поднять сервер локально
-
-			// imageData.data – массив всех пикселей изображения
-			// хранит R, G, B + прозрачность
-			for (let i = 0; i < imageData.data.length; i += 4) {
-				imageData.data[i + 2] = 0;
-			}
-			context.putImageData(imageData, 0, 0, 0, 0, image.width, image.height);
-			image = canvas;
-		} else {
-			image = originalImage;
-		}
+		filters.blue = blueFilterCheck.checked;
+		updateFilter();
 	})
 
 	greenFilterCheck.addEventListener('change', () => {
-		if (greenFilterCheck.checked) {
+		filters.green = greenFilterCheck.checked;
+		updateFilter();
+	})
+
+	function updateFilter() {
+
+		if (!(filters.green && filters.blue && filters.red && filters.gray)) {
+			image = originalImage;
+		}
 			// создаесм виртуальный элемент canvas
 			const canvas = document.createElement('canvas');
 			const context = canvas.getContext('2d');
@@ -144,17 +101,35 @@
 			const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
 			//console.log(imageData); // для использования getImageData нужно поднять сервер локально
 
-			// imageData.data – массив всех пикселей изображения
-			// хранит R, G, B + прозрачность
-			for (let i = 0; i < imageData.data.length; i += 4) {
-				imageData.data[i + 1] = 0;
+			if (filters.gray) {
+				// imageData.data – массив всех пикселей изображения
+			 	// хранит R, G, B + прозрачность
+				for (let i = 0; i < imageData.data.length; i += 4) {
+					//  найдем среднее арифметическое для каждого цвета
+					let average = (imageData.data[i] + imageData.data[i + 1] + imageData.data[i + 2]) / 3;
+					imageData.data[i] = average;
+					imageData.data[i + 1] = average;
+					imageData.data[i + 2] = average;
+				}
+			}
+			if (filters.red) {
+				for (let i = 0; i < imageData.data.length; i += 4) {
+					imageData.data[i] = 0;
+				}
+			}
+			if (filters.green) {
+				for (let i = 0; i < imageData.data.length; i += 4) {
+					imageData.data[i + 1] = 0;
+				}
+			}
+			if (filters.blue) {
+				for (let i = 0; i < imageData.data.length; i += 4) {
+					imageData.data[i + 2] = 0;
+				}
 			}
 			context.putImageData(imageData, 0, 0, 0, 0, image.width, image.height);
 			image = canvas;
-		} else {
-			image = originalImage;
-		}
-	})
+	}
 
 	// загрузка изображения
 	loadImageInput.addEventListener('change', event => {
