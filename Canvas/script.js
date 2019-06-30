@@ -1,7 +1,7 @@
 (async function () {
 	const canvas = document.getElementById('canvas'); // DOM элемент
 	const context = canvas.getContext('2d'); // программный элемент
-	const originalImage = await loadImage('space.jpg');
+	let originalImage = await loadImage('space.jpg');
 	const mouse = getMouse(canvas); // теперь в mouse хранится объект,
 									// который будет содержать данные по координатам мыши над эл-том canvas
 									// этой ф-ии нет в нативном JS, поэтому она создана в additional.js
@@ -12,6 +12,8 @@
 	const redFilterCheck = document.getElementById('filterRed');
 	const blueFilterCheck = document.getElementById('filterBlue');
 	const greenFilterCheck = document.getElementById('filterGreen');
+
+	const loadImageInput = document.getElementById('loadImage'); // внутри хранится список загруженных файлов
 
 	let image = originalImage;
 
@@ -58,9 +60,30 @@
 	}
 
 	grayFilterCheck.addEventListener('change', () => {
-		// console.log('grayFilterCheck', grayFilterCheck.checked);
+		if (grayFilterCheck.checked) {
+			// создаесм виртуальный элемент canvas
+			const canvas = document.createElement('canvas');
+			const context = canvas.getContext('2d');
+			canvas.width = image.width;
+			canvas.height = image.height;
+			context.drawImage(image, 0, 0, image.width, image.height, 0, 0, image.width, image.height);
 
+			const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+
+			for (let i = 0; i < imageData.data.length; i += 4) {
+				//  найдем среднее арифметическое для каждого цвета
+				let average = (imageData.data[i] + imageData.data[i + 1] + imageData.data[i + 2]) / 3;
+				imageData.data[i] = average;
+				imageData.data[i + 1] = average;
+				imageData.data[i + 2] = average;
+			}
+			context.putImageData(imageData, 0, 0, 0, 0, image.width, image.height);
+			image = canvas;
+		} else {
+			image = originalImage;
+		}
 	})
+
 	redFilterCheck.addEventListener('change', () => {
 		if (redFilterCheck.checked) {
 			// создаесм виртуальный элемент canvas
@@ -84,6 +107,7 @@
 			image = originalImage;
 		}
 	})
+
 	blueFilterCheck.addEventListener('change', () => {
 		if (blueFilterCheck.checked) {
 			// создаесм виртуальный элемент canvas
@@ -107,6 +131,7 @@
 			image = originalImage;
 		}
 	})
+
 	greenFilterCheck.addEventListener('change', () => {
 		if (greenFilterCheck.checked) {
 			// создаесм виртуальный элемент canvas
@@ -129,6 +154,31 @@
 		} else {
 			image = originalImage;
 		}
+	})
+
+	// загрузка изображения
+	loadImageInput.addEventListener('change', event => {
+		//console.log(loadImageInput.files); // список загруженных файлов
+		const reader = new FileReader();
+		const file = loadImageInput.files[0];
+		reader.readAsDataURL(file); // прочти файл как данные по URL
+		reader.onload = () => {
+			const newImage = new Image();
+			newImage.onload = () => {
+				originalImage = image = newImage;
+			}
+			//image.src = file.name;
+			newImage.src = reader.result;
+		}
+	})
+
+	// скачивание изображения
+	document.getElementById('dowload').addEventListener('click', () => {
+		// для скачивания нужна ссылка
+		const aElem = document.createElement('a');
+		aElem.href = canvas.toDataURL('image/jpeg');
+		aElem.setAttribute('download', 'yourImage.jpg'); // ссылка для скачивания, а не для перехода
+		aElem.click();
 	})
 
 })()
