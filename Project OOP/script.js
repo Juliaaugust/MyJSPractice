@@ -58,19 +58,36 @@
 
 
 function Person(name, surname, age) {
-	this.name = name,
-	this.surname = surname,
-	this.age = age,
+	this.name = name
+	this.surname = surname
+	this.age = age
 
-	this.sayHello = () => {
-		console.log(`Привет! Меня зовут ${this.name} ${this.surname}. Мне ${this.age} года.`);
-	}
+	// this.sayHello = () => {
+	// 	console.log(`Привет! Меня зовут ${this.name} ${this.surname}. Мне ${this.age} года.`);
+	// }
+
+	Person.count += 1 // подсчитываем количество персон
+}
+
+// статические свойства и методы – принадлежат не контексту this (не экземпляру класса), а самому классу
+Person.count = 0;
+
+Person.prototype.sayHello = function () {
+	console.log(`Привет! Меня зовут ${this.name} ${this.surname}. Мне ${this.age} года.`);
 }
 
 const alla = new Person('Алла', 'Гульцева', 22);
+const julia = new Person('Юлия', 'Гульцева', 22);
+
+const person3 = new Person('name', 'surname', 18);
+
 console.log(alla)
+console.log(julia)
 
 alla.sayHello()
+
+console.log('Количество персон: ' + Person.count)
+
 
 
 
