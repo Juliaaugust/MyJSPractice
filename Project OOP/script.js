@@ -57,36 +57,93 @@
 
 
 
-function Person(name, surname, age) {
-	this.name = name
-	this.surname = surname
-	this.age = age
+// function Person(name, surname, age) {
+// 	this.name = name
+// 	this.surname = surname
+// 	this.age = age
 
-	// this.sayHello = () => {
-	// 	console.log(`Привет! Меня зовут ${this.name} ${this.surname}. Мне ${this.age} года.`);
-	// }
+// 	// this.sayHello = () => {
+// 	// 	console.log(`Привет! Меня зовут ${this.name} ${this.surname}. Мне ${this.age} года.`);
+// 	// }
 
-	Person.count += 1 // подсчитываем количество персон
+// 	Person.count += 1 // подсчитываем количество персон
+// }
+
+// // статические свойства и методы – принадлежат не контексту this (не экземпляру класса), а самому классу
+// Person.count = 0;
+
+// Person.prototype.sayHello = function () {
+// 	console.log(`Привет! Меня зовут ${this.name} ${this.surname}. Мне ${this.age} года.`);
+// }
+
+// const alla = new Person('Алла', 'Гульцева', 22);
+// const julia = new Person('Юлия', 'Гульцева', 22);
+
+// const person3 = new Person('name', 'surname', 18);
+
+// console.log(alla)
+// console.log(julia)
+
+// alla.sayHello()
+
+// console.log('Количество персон: ' + Person.count)
+
+
+
+
+
+// новый формат – синтаксический сахар
+
+class Person {
+	constructor (name, surname, age) {
+		this.name = name
+		this.surname = surname
+		this.age = age
+
+		Person.count += 1
+	}
+
+	get fullName () {
+		return `${this.name} ${this.surname}`
+	}
+
+	set fullName (val) {
+		const namesArr = val.split(' ')
+
+		this.name = namesArr[0]
+		this.surname = namesArr[1]
+
+		return val
+	}
+
+	sayHello () {
+		console.log(`Привет! Меня зовут ${this.name} ${this.surname}. Мне ${this.age} года.`);
+	}
+
+	// статические методы
+	static howMuch () {
+		console.log('Создано пользователей: ' + Person.count)
+	}
 }
 
-// статические свойства и методы – принадлежат не контексту this (не экземпляру класса), а самому классу
-Person.count = 0;
-
-Person.prototype.sayHello = function () {
-	console.log(`Привет! Меня зовут ${this.name} ${this.surname}. Мне ${this.age} года.`);
-}
+Person.count = 0; // статические свойства
 
 const alla = new Person('Алла', 'Гульцева', 22);
-const julia = new Person('Юлия', 'Гульцева', 22);
-
-const person3 = new Person('name', 'surname', 18);
+const julia = new Person('Юля', 'Гульцева', 22);
 
 console.log(alla)
-console.log(julia)
 
-alla.sayHello()
+console.log(julia.fullName)
+julia.sayHello()
 
-console.log('Количество персон: ' + Person.count)
+julia.fullName = 'Юлия Гульцева'
+console.log(julia.fullName)
+julia.sayHello()
+
+
+
+
+
 
 
 
